@@ -20,11 +20,17 @@ ob_start();
     </div>
 </form>
 <table class="table table-bordered">
-    <thead><tr><th>ID</th><th>Tên</th><th>Danh mục</th><th>Thương hiệu</th><th>Giá</th><th>Chức năng</th></tr></thead>
+    <thead><tr><th>Hình ảnh</th><th>Tên</th><th>Danh mục</th><th>Thương hiệu</th><th>Giá</th><th>Chức năng</th></tr></thead>
     <tbody>
         <?php foreach ($products as $item): ?>
         <tr>
-            <td><?= $item->id ?></td>
+            <td>
+                <?php if ($item->image != "") { ?>
+                    <img src="/MiniShop_NguyenNghiaNhan/uploads/products/<?= $item->image ?>" class="img-thumbnail" width="80">
+                <?php } else { ?>
+                    <span class="text-muted">No Image</span>
+                <?php } ?>
+            </td>
             <td><?= htmlspecialchars($item->proname) ?></td>
             <td><?= htmlspecialchars($item->cateName) ?></td>
             <td><?= htmlspecialchars($item->brandName) ?></td>

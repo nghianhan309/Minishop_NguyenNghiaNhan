@@ -28,7 +28,7 @@ class ProductDAO extends BaseDAO {
 
         if ($result) {
             while ($row = $result->fetch_assoc()) {
-                $p = new Product($row["category_id"], $row["brand_id"], $row["proname"], $row["slug"], $row["price"], $row["discount_price"], $row["quantity"], $row["description"], $row["status"]);
+                $p = new Product($row["category_id"], $row["brand_id"], $row["proname"], $row["slug"], $row["price"], $row["discount_price"], $row["quantity"], $row["description"], $row["image"], $row["status"]);
                 $p->id = $row["id"];
                 $p->cateName = $row["cateName"];
                 $p->brandName = $row["brandName"];
@@ -45,24 +45,27 @@ class ProductDAO extends BaseDAO {
         $stmt->execute();
         $result = $stmt->get_result();
         if ($row = $result->fetch_assoc()) {
-            $p = new Product($row["category_id"], $row["brand_id"], $row["proname"], $row["slug"], $row["price"], $row["discount_price"], $row["quantity"], $row["description"], $row["status"]);
+            $p = new Product($row["category_id"], $row["brand_id"], $row["proname"], $row["slug"], $row["price"], $row["discount_price"], $row["quantity"], $row["description"], $row["image"], $row["status"]);
             $p->id = $row["id"];
             return $p;
         }
         return null;
     }
 
-    public function insert(Product $p): bool {
-        $sql = "INSERT INTO products(category_id, brand_id, proname, slug, price, discount_price, quantity, description, status) VALUES(?,?,?,?,?,?,?,?,?)";
+    public function insert(Product $p): int {
+        $sql = "INSERT INTO products(category_id, brand_id, proname, slug, price, discount_price, quantity, description, image, status) VALUES(?,?,?,?,?,?,?,?,?,?)";
         $stmt = $this->prepare($sql);
-        $stmt->bind_param("iissddisi", $p->category_id, $p->brand_id, $p->proname, $p->slug, $p->price, $p->discount_price, $p->quantity, $p->description, $p->status);
-        return $stmt->execute();
+        $stmt->bind_param("iissddissi", $p->category_id, $p->brand_id, $p->proname, $p->slug, $p->price, $p->discount_price, $p->quantity, $p->description, $p->image, $p->status);
+        if ($stmt->execute()) {
+            return $this->conn->insert_id;
+        }
+        return 0;
     }
 
     public function update(Product $p): bool {
-        $sql = "UPDATE products SET category_id=?, brand_id=?, proname=?, slug=?, price=?, discount_price=?, quantity=?, description=?, status=? WHERE id=?";
+        $sql = "UPDATE products SET category_id=?, brand_id=?, proname=?, slug=?, price=?, discount_price=?, quantity=?, description=?, image=?, status=? WHERE id=?";
         $stmt = $this->prepare($sql);
-        $stmt->bind_param("iissddisii", $p->category_id, $p->brand_id, $p->proname, $p->slug, $p->price, $p->discount_price, $p->quantity, $p->description, $p->status, $p->id);
+        $stmt->bind_param("iissddissii", $p->category_id, $p->brand_id, $p->proname, $p->slug, $p->price, $p->discount_price, $p->quantity, $p->description, $p->image, $p->status, $p->id);
         return $stmt->execute();
     }
 
@@ -90,6 +93,34 @@ class ProductDAO extends BaseDAO {
             $list[] = $row;
         }
         return $list;
+    }
+
+    // GALLERY
+    public function insertImage(int $productId, string $image): bool {
+        $sql = "INSERT INTO product_images(product_id, image) VALUES (?, ?)";
+        $stmt = $this->prepare($sql);
+        $stmt->bind_param("is", $productId, $image);
+        return $stmt->execute();
+    }
+
+    public function getImagesByProductId(int $productId): array {
+        $list = [];
+        $sql = "SELECT * FROM product_images WHERE product_id = ?";
+        $stmt = $this->prepare($sql);
+        $stmt->bind_param("i", $productId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        while ($row = $result->fetch_assoc()) {
+            $list[] = $row;
+        }
+        return $list;
+    }
+
+    public function deleteImage(int $id): bool {
+        $sql = "DELETE FROM product_images WHERE id=?";
+        $stmt = $this->prepare($sql);
+        $stmt->bind_param("i", $id);
+        return $stmt->execute();
     }
 }
 ?>
