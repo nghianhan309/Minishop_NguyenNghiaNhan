@@ -31,6 +31,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $errors["password"] = "Mật khẩu không chính xác.";
         } else {
             $_SESSION["user"] = $user;
+            if (isset($_POST["remember"])) {
+                setcookie("remember_user", $user->username, time() + (86400 * 30), "/");
+                setcookie("remember_token", md5($user->username . $user->password), time() + (86400 * 30), "/");
+            }
             header("Location: dashboard.php");
             exit;
         }
