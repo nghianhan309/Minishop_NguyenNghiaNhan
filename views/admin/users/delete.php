@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/../../../middleware/RoleMiddleware.php';
+RoleMiddleware::checkAdmin();
 require_once __DIR__ . '/../../../middleware/CsrfMiddleware.php';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') { CsrfMiddleware::verify(); }
 else { die('Invalid Request'); }

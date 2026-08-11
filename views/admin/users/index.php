@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/../../../middleware/RoleMiddleware.php';
+RoleMiddleware::checkAdmin();
 $pageTitle = "Quản lý nhân viên";
 require_once __DIR__ . "/../../../dao/UserDAO.php";
 $dao = new UserDAO();

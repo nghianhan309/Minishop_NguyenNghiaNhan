@@ -26,11 +26,13 @@
                     <i class="fs-4 bi-people"></i> <span class="ms-1 d-none d-sm-inline">Khách hàng</span>
                 </a>
             </li>
+            <?php if (isset($_SESSION['user']) && $_SESSION['user']->role == 1): ?>
             <li class="nav-item w-100 mb-1">
                 <a href="/MiniShop_NguyenNghiaNhan/views/admin/users/index.php" class="nav-link align-middle px-0 text-white">
                     <i class="fs-4 bi-person-badge"></i> <span class="ms-1 d-none d-sm-inline">Người dùng</span>
                 </a>
             </li>
+            <?php endif; ?>
             <li class="nav-item w-100 mb-1">
                 <a href="/MiniShop_NguyenNghiaNhan/views/admin/orders/index.php" class="nav-link align-middle px-0 text-white">
                     <i class="fs-4 bi-cart"></i> <span class="ms-1 d-none d-sm-inline">Đơn hàng</span>
