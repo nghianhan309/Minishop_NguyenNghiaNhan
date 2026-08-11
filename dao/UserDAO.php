@@ -3,6 +3,7 @@ require_once __DIR__ . "/BaseDAO.php";
 
 class User {
     public int $id = 0;
+    public ?string $password = null;
     public function __construct(
         public string $fullname,
         public string $username,
@@ -49,6 +50,29 @@ class UserDAO extends BaseDAO {
         $result = $this->executeQuery("SELECT COUNT(*) as total FROM users");
         if ($result && $row = $result->fetch_assoc()) return (int)$row["total"];
         return 0;
+    }
+
+    public function findByUsername(string $username): ?User {
+        $sql = "SELECT * FROM users WHERE username = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("s", $username);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+        if (!$row) {
+            return null;
+        }
+        $u = new User(
+            $row["fullname"],
+            $row["username"],
+            $row["email"] ?? null,
+            $row["phone"] ?? null,
+            $row["role"],
+            $row["status"]
+        );
+        $u->id = $row["id"];
+        $u->password = $row["password"];
+        return $u;
     }
 
     public function findById(int $id): ?User {

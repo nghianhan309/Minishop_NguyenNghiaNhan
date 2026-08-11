@@ -41,11 +41,7 @@
                     <i class="fs-4 bi-bar-chart"></i> <span class="ms-1 d-none d-sm-inline">Báo cáo</span>
                 </a>
             </li>
-            <li class="nav-item w-100 mt-4">
-                <a href="#" class="nav-link align-middle px-0 text-white">
-                    <i class="fs-4 bi-box-arrow-right"></i> <span class="ms-1 d-none d-sm-inline">Đăng xuất</span>
-                </a>
-            </li>
+
         </ul>
     </div>
 </div>

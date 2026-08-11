@@ -15,8 +15,17 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="#"><i class="bi bi-cart3"></i> Mini Shop</a>
-            <div class="d-flex text-white align-items-center">
-                <i class="bi bi-person-circle me-2"></i> Admin
+<?php
+$user = $_SESSION["user"] ?? null;
+?>
+            <div class="d-flex text-white align-items-center gap-2">
+                <i class="bi bi-person-circle fs-3"></i> 
+                <span>
+                    <?= $user ? htmlspecialchars($user->fullname) : "Admin" ?>
+                </span>
+                <a href="/MiniShop_NguyenNghiaNhan/views/admin/logout.php" class="text-decoration-none text-light">
+                    | Đăng xuất
+                </a>
             </div>
         </div>
     </nav>
