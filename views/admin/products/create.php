@@ -88,7 +88,12 @@ ob_start();
     <div class="mb-3"><label>Thương hiệu</label>
         <select name="brandId" class="form-select">
             <option value="0">Chọn...</option>
-            <?php foreach($brands as $b): ?><option value="<?= $b["id"] ?? $b->id ?? $b->id ?>"><?= $b["brandname"] ?? "Brand" ?></option><?php endforeach; ?>
+            <?php foreach($brands as $b): 
+                $bid = is_object($b) ? $b->id : ($b["id"] ?? 0);
+                $bname = is_object($b) ? $b->name : ($b["brandname"] ?? "Brand");
+            ?>
+                <option value="<?= $bid ?>"><?= $bname ?></option>
+            <?php endforeach; ?>
         </select>
     </div>
     <div class="mb-3"><label>Giá</label><input type="number" name="price" class="form-control"></div>

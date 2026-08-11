@@ -83,6 +83,39 @@ class CategoryDAO extends BaseDAO
         } catch (Exception $e) { throw $e; }
     }
 
+    
+    public function getPage(int $limit, int $offset, string $keyword = "", string $sort = ""): array {
+        $list = [];
+        $sql = "SELECT * FROM categories";
+        
+        if ($keyword !== "") {
+            $sql .= " WHERE catename LIKE ? OR slug LIKE ?";
+        }
+        
+        if ($sort === "name_asc") $sql .= " ORDER BY catename ASC";
+        elseif ($sort === "name_desc") $sql .= " ORDER BY catename DESC";
+        else $sql .= " ORDER BY id DESC";
+
+        $sql .= " LIMIT ? OFFSET ?";
+
+        $stmt = $this->prepare($sql);
+        if ($keyword !== "") {
+            $kw = "%" . $keyword . "%";
+            $stmt->bind_param("ssii", $kw, $kw, $limit, $offset);
+        } else {
+            $stmt->bind_param("ii", $limit, $offset);
+        }
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        while ($row = $result->fetch_assoc()) {
+            $c = new Category($row["catename"], $row["slug"], $row["image"], $row["description"], $row["status"]);
+            $c->id = $row["id"];
+            $c->createdAt = $row["created_at"];
+            $list[] = $c;
+        }
+        return $list;
+    }
     public function getTotalCount(): int {
         $sql = "SELECT COUNT(*) as total FROM categories";
         $result = $this->executeQuery($sql);

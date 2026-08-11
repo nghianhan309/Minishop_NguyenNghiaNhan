@@ -95,6 +95,45 @@ class ProductDAO extends BaseDAO {
         return $list;
     }
 
+    
+    public function getPage(int $limit, int $offset, string $keyword = "", string $sort = ""): array {
+        $list = [];
+        $sql = "SELECT p.*, c.catename as cateName, b.brandname as brandName 
+                FROM products p 
+                INNER JOIN categories c ON p.category_id = c.id 
+                INNER JOIN brands b ON p.brand_id = b.id";
+        
+        if ($keyword !== "") {
+            $sql .= " WHERE p.proname LIKE ?";
+        }
+        
+        if ($sort === "price_asc") $sql .= " ORDER BY p.price ASC";
+        elseif ($sort === "price_desc") $sql .= " ORDER BY p.price DESC";
+        elseif ($sort === "name_asc") $sql .= " ORDER BY p.proname ASC";
+        elseif ($sort === "name_desc") $sql .= " ORDER BY p.proname DESC";
+        else $sql .= " ORDER BY p.id DESC";
+
+        $sql .= " LIMIT ? OFFSET ?";
+
+        $stmt = $this->prepare($sql);
+        if ($keyword !== "") {
+            $kw = "%" . $keyword . "%";
+            $stmt->bind_param("sii", $kw, $limit, $offset);
+        } else {
+            $stmt->bind_param("ii", $limit, $offset);
+        }
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        while ($row = $result->fetch_assoc()) {
+            $p = new Product($row["category_id"], $row["brand_id"], $row["proname"], $row["slug"], $row["price"], $row["discount_price"], $row["quantity"], $row["description"], $row["image"], $row["status"]);
+            $p->id = $row["id"];
+            $p->cateName = $row["cateName"];
+            $p->brandName = $row["brandName"];
+            $list[] = $p;
+        }
+        return $list;
+    }
     // GALLERY
     public function insertImage(int $productId, string $image): bool {
         $sql = "INSERT INTO product_images(product_id, image) VALUES (?, ?)";

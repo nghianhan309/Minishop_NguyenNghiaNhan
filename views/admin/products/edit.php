@@ -105,8 +105,8 @@ ob_start();
         <select name="brandId" class="form-select">
             <option value="0">Chọn...</option>
             <?php foreach($brands as $b): 
-                $bid = $b["id"] ?? $b->id ?? $b->id;
-                $bname = $b["brandname"] ?? "Brand";
+                $bid = is_object($b) ? $b->id : ($b["id"] ?? 0);
+                $bname = is_object($b) ? $b->name : ($b["brandname"] ?? "Brand");
             ?>
                 <option value="<?= $bid ?>" <?= $bid == $product->brand_id ? "selected" : "" ?>><?= $bname ?></option>
             <?php endforeach; ?>

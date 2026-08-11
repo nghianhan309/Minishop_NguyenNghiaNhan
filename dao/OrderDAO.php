@@ -4,6 +4,68 @@ require_once __DIR__ . "/BaseDAO.php";
 class OrderDAO extends BaseDAO {
     public function __construct() { parent::__construct(); }
 
+    
+    public function countOrder(string $keyword = "", string $status = ""): int {
+        $sql = "SELECT COUNT(*) AS total FROM orders o JOIN customers c ON o.customer_id = c.id WHERE 1=1";
+        $types = ""; $params = [];
+        if ($keyword !== "") {
+            $sql .= " AND (o.order_code LIKE ? OR c.fullname LIKE ?)";
+            $types .= "ss";
+            $kw = "%".$keyword."%";
+            $params[] = $kw; $params[] = $kw;
+        }
+        if ($status !== "") {
+            $sql .= " AND o.status = ?";
+            $types .= "i";
+            $params[] = (int)$status;
+        }
+        if ($types !== "") {
+            $stmt = $this->prepare($sql);
+            $stmt->bind_param($types, ...$params);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            if($row = $result->fetch_assoc()) return (int)$row["total"];
+        } else {
+            $result = $this->executeQuery($sql);
+            if($row = $result->fetch_assoc()) return (int)$row["total"];
+        }
+        return 0;
+    }
+
+    public function getPage(int $limit, int $offset, string $keyword = "", string $status = "", string $sort = ""): array {
+        $list = [];
+        $sql = "SELECT o.*, c.fullname as customer_name FROM orders o JOIN customers c ON o.customer_id = c.id WHERE 1=1";
+        $types = ""; $params = [];
+        if ($keyword !== "") {
+            $sql .= " AND (o.order_code LIKE ? OR c.fullname LIKE ?)";
+            $types .= "ss";
+            $kw = "%".$keyword."%";
+            $params[] = $kw; $params[] = $kw;
+        }
+        if ($status !== "") {
+            $sql .= " AND o.status = ?";
+            $types .= "i";
+            $params[] = (int)$status;
+        }
+        
+        if ($sort === "amount_asc") $sql .= " ORDER BY o.total_amount ASC";
+        elseif ($sort === "amount_desc") $sql .= " ORDER BY o.total_amount DESC";
+        elseif ($sort === "date_asc") $sql .= " ORDER BY o.created_at ASC";
+        elseif ($sort === "date_desc") $sql .= " ORDER BY o.created_at DESC";
+        else $sql .= " ORDER BY o.id DESC";
+
+        $sql .= " LIMIT ? OFFSET ?";
+        $types .= "ii";
+        $params[] = $limit; $params[] = $offset;
+
+        $stmt = $this->prepare($sql);
+        $stmt->bind_param($types, ...$params);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        while ($row = $result->fetch_assoc()) $list[] = $row;
+        return $list;
+    }
     public function getTotalCount(): int {
         $result = $this->executeQuery("SELECT COUNT(*) as total FROM orders");
         if ($result && $row = $result->fetch_assoc()) return (int)$row["total"];

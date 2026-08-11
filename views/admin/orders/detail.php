@@ -6,15 +6,22 @@ $id = $_GET["id"] ?? 0;
 $order = $dao->findById($id);
 if (!$order) die("Không tìm thấy đơn hàng");
 
+session_start();
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["btnUpdateStatus"])) {
     $dao->updateStatus($id, (int)$_POST["status"]);
+    $_SESSION["success_msg"] = "Cập nhật trạng thái thành công!";
     header("Location: detail.php?id=$id"); exit;
 }
 
 $details = $dao->getOrderDetails($id);
 ob_start();
+$success_msg = $_SESSION["success_msg"] ?? "";
+unset($_SESSION["success_msg"]);
 ?>
 <h2>Chi tiết đơn hàng #<?= $order["order_code"] ?></h2>
+<?php if($success_msg): ?>
+    <div class="alert alert-success"><?= $success_msg ?></div>
+<?php endif; ?>
 <div class="card mb-3">
     <div class="card-body">
         <p><strong>Khách hàng:</strong> <?= htmlspecialchars($order["customer_name"]) ?></p>
