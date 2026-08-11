@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../../../middleware/CsrfMiddleware.php';
 $pageTitle = "Cập nhật sản phẩm";
 require_once __DIR__ . "/../../../dao/ProductDAO.php";
 require_once __DIR__ . "/../../../dao/CategoryDAO.php";
@@ -23,6 +24,7 @@ $gallery = $dao->getImagesByProductId($id);
 $errors = [];
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    CsrfMiddleware::verify();
     $proname = trim($_POST["productName"] ?? "");
     $slug = trim($_POST["slug"] ?? "");
     $categoryId = (int)($_POST["categoryId"] ?? 0);
@@ -91,6 +93,7 @@ ob_start();
 <h2>Cập nhật sản phẩm</h2>
 <?php if (!empty($errors)): ?><div class="alert alert-danger"><?= implode("<br>", $errors) ?></div><?php endif; ?>
 <form method="POST" enctype="multipart/form-data">
+    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION["csrf_token"] ?? "") ?>">
     <div class="mb-3"><label>Tên sản phẩm</label><input type="text" name="productName" class="form-control" value="<?= htmlspecialchars($product->proname) ?>"></div>
     <div class="mb-3"><label>Slug</label><input type="text" name="slug" class="form-control" value="<?= htmlspecialchars($product->slug) ?>"></div>
     <div class="mb-3"><label>Danh mục</label>

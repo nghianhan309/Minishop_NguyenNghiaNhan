@@ -5,6 +5,8 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 AuthMiddleware::handle();
+require_once __DIR__ . '/../../../middleware/CsrfMiddleware.php';
+CsrfMiddleware::generateToken();
 include __DIR__ . "/header.php"; 
 ?>
 <div class="container-fluid">

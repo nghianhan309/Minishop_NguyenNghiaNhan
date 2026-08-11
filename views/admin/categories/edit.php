@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../../../middleware/CsrfMiddleware.php';
 $pageTitle = "Cập nhật danh mục";
 require_once __DIR__ . "/../../../dao/CategoryDAO.php";
 $dao = new CategoryDAO();
@@ -9,6 +10,7 @@ if (!$category) die("Không tìm thấy danh mục");
 
 $errors = [];
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    CsrfMiddleware::verify();
     $cateName = trim($_POST["cateName"] ?? "");
     $slug = trim($_POST["slug"] ?? "");
     $description = trim($_POST["description"] ?? "");
@@ -37,6 +39,7 @@ ob_start();
     <div class="alert alert-danger"><?= implode("<br>", $errors) ?></div>
 <?php endif; ?>
 <form method="POST">
+    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION["csrf_token"] ?? "") ?>">
     <input type="hidden" name="categoryId" value="<?= $category->id ?>">
     <div class="mb-3">
         <label>Tên danh mục</label>

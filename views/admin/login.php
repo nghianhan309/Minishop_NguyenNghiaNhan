@@ -2,10 +2,13 @@
 session_start();
 require_once __DIR__ . "/../../dao/UserDAO.php";
 require_once __DIR__ . "/../../middleware/GuestMiddleware.php";
+require_once __DIR__ . "/../../middleware/CsrfMiddleware.php";
 GuestMiddleware::handle();
+CsrfMiddleware::generateToken();
 
 $errors = [];
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    CsrfMiddleware::verify();
     $username = trim($_POST["username"] ?? "");
     $password = $_POST["password"] ?? "";
     
@@ -51,6 +54,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         <h3 class="text-center mb-4">Đăng nhập</h3>
                         <form action="login.php" method="POST">
                             <div class="mb-3">
+                                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION["csrf_token"] ?? "") ?>">
                                 <label class="form-label">Tên đăng nhập</label>
                                 <input type="text" 
                                        name="username" 
