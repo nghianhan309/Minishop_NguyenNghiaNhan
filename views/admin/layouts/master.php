@@ -4,7 +4,8 @@ require_once __DIR__ . '/../../../middleware/AuthMiddleware.php';
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-AuthMiddleware::handle();
+// Tạm tắt AuthMiddleware để test Câu C theo yêu cầu PDF
+// AuthMiddleware::handle();
 require_once __DIR__ . '/../../../middleware/CsrfMiddleware.php';
 CsrfMiddleware::generateToken();
 include __DIR__ . "/header.php"; 

@@ -1,28 +1,14 @@
 <?php
-$pageTitle = "Danh sách sản phẩm";
-require_once __DIR__ . "/../../../dao/ProductDAO.php";
-$dao = new ProductDAO();
+// Logic has been moved to ProductController
 
-if (isset($_POST["btnDelete"])) {
-    $dao->delete((int)$_POST["id"]);
-}
-
-$keyword = trim($_GET["keyword"] ?? "");
-$limit = (int)($_GET["limit"] ?? 10);
-$page = (int)($_GET["page"] ?? 1);
-$sort = trim($_GET["sort"] ?? "");
-
-$offset = ($page - 1) * $limit;
-$totalRecords = $dao->count("products", "proname", $keyword);
-$totalPages = ceil($totalRecords / $limit);
-
-$products = $dao->getPage($limit, $offset, $keyword, $sort);
 ob_start();
 ?>
 <h2>Danh sách sản phẩm</h2>
 <a href="create.php" class="btn btn-success mb-3">Thêm mới</a>
 
 <form class="row mb-3" method="GET">
+    <input type="hidden" name="controller" value="product">
+    <input type="hidden" name="action" value="index">
     <div class="col-md-3">
         <input type="text" name="keyword" class="form-control" placeholder="Tên sản phẩm..." value="<?= htmlspecialchars($keyword) ?>">
         <input type="hidden" name="limit" value="<?= $limit ?>">
