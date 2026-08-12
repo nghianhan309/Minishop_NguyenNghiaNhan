@@ -1,46 +1,5 @@
 <?php
-session_start();
-// var_dump($_SESSION); // xóa dòng này sau khi kiểm tra xong
-require_once __DIR__ . "/../../dao/UserDAO.php";
-require_once __DIR__ . "/../../middleware/GuestMiddleware.php";
-require_once __DIR__ . "/../../middleware/CsrfMiddleware.php";
-GuestMiddleware::handle();
-CsrfMiddleware::generateToken();
-
-$errors = [];
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    CsrfMiddleware::verify();
-    $username = trim($_POST["username"] ?? "");
-    $password = $_POST["password"] ?? "";
-
-    // validate
-    if ($username === "") {
-        $errors["username"] = "Vui lòng nhập tên đăng nhập.";
-    }
-    if ($password === "") {
-        $errors["password"] = "Vui lòng nhập mật khẩu.";
-    }
-
-    // Nếu không có lỗi thì tìm user
-    if (empty($errors)) {
-        $userDAO = new UserDAO();
-        $user = $userDAO->findByUsername($username);
-
-        if (!$user) {
-            $errors["username"] = "Tên đăng nhập không tồn tại.";
-        } elseif (!password_verify($password, $user->password)) {
-            $errors["password"] = "Mật khẩu không chính xác.";
-        } else {
-            $_SESSION["user"] = $user;
-            if (isset($_POST["remember"])) {
-                setcookie("remember_user", $user->username, time() + (86400 * 30), "/");
-                setcookie("remember_token", md5($user->username . $user->password), time() + (86400 * 30), "/");
-            }
-            header("Location: dashboard.php");
-            exit;
-        }
-    }
-}
+// Logic has been moved to AuthController
 ?>
 <!DOCTYPE html>
 <html lang="vi">
@@ -59,7 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 <div class="card shadow">
                     <div class="card-body p-4">
                         <h3 class="text-center mb-4">Đăng nhập</h3>
-                        <form action="login.php" method="POST">
+                        <form method="POST">
                             <div class="mb-3">
                                 <input type="hidden" name="csrf_token"
                                     value="<?= htmlspecialchars($_SESSION["csrf_token"] ?? "") ?>">

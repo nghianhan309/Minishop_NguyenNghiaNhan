@@ -1,4 +1,8 @@
 <?php
+namespace Middleware;
+
+use DAO\UserDAO;
+
 class RoleMiddleware
 {
     public static function checkAdmin()

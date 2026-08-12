@@ -23,7 +23,7 @@ $user = $_SESSION["user"] ?? null;
                 <span>
                     <?= $user ? htmlspecialchars($user->fullname) : "Admin" ?>
                 </span>
-                <a href="/MiniShop_NguyenNghiaNhan/views/admin/logout.php" class="text-decoration-none text-light">
+                <a href="/MiniShop_NguyenNghiaNhan/index.php?area=admin&controller=auth&action=logout" class="text-decoration-none text-light">
                     | Đăng xuất
                 </a>
             </div>

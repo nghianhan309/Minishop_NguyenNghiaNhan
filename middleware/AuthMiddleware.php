@@ -1,4 +1,8 @@
 <?php
+namespace Middleware;
+
+use DAO\UserDAO;
+
 class AuthMiddleware
 {
     public static function handle()
@@ -17,8 +21,7 @@ class AuthMiddleware
         }
 
         if (!isset($_SESSION["user"])) {
-            // Absolute path redirect to avoid relative path trap!
-            header("Location: /MiniShop_NguyenNghiaNhan/views/admin/login.php");
+            header("Location: index.php?area=admin&controller=auth&action=login");
             exit;
         }
     }
