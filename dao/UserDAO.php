@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . "/BaseDAO.php";
+use DAO\BaseDAO;
 
 class User {
     public int $id = 0;
