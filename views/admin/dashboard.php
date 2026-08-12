@@ -23,6 +23,9 @@ $newestOrders = $orderDAO->getNewestOrders(5);
 $pageTitle = "Dashboard";
 ob_start();
 ?>
+<div class="mt-3">
+    <?php  ?>
+</div>
 <h2 class="mb-4">Dashboard</h2>
 <div class="alert alert-success">
     Chào mừng bạn đến với hệ thống quản trị Mini Shop.
@@ -85,12 +88,12 @@ ob_start();
             </thead>
             <tbody>
                 <?php foreach ($newestProducts as $p): ?>
-                <tr>
-                    <td><?= $p['id'] ?></td>
-                    <td><?= htmlspecialchars($p['proname']) ?></td>
-                    <td><?= number_format($p['price'], 0, ',', '.') ?> đ</td>
-                    <td><?= date('d/m/Y', strtotime($p['created_at'])) ?></td>
-                </tr>
+                    <tr>
+                        <td><?= $p['id'] ?></td>
+                        <td><?= htmlspecialchars($p['proname']) ?></td>
+                        <td><?= number_format($p['price'], 0, ',', '.') ?> đ</td>
+                        <td><?= date('d/m/Y', strtotime($p['created_at'])) ?></td>
+                    </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
@@ -108,12 +111,12 @@ ob_start();
             </thead>
             <tbody>
                 <?php foreach ($newestOrders as $o): ?>
-                <tr>
-                    <td><?= htmlspecialchars($o['order_code']) ?></td>
-                    <td><?= htmlspecialchars($o['customer_name']) ?></td>
-                    <td><?= number_format($o['total_amount'], 0, ',', '.') ?> đ</td>
-                    <td><?= date('d/m/Y', strtotime($o['created_at'])) ?></td>
-                </tr>
+                    <tr>
+                        <td><?= htmlspecialchars($o['order_code']) ?></td>
+                        <td><?= htmlspecialchars($o['customer_name']) ?></td>
+                        <td><?= number_format($o['total_amount'], 0, ',', '.') ?> đ</td>
+                        <td><?= date('d/m/Y', strtotime($o['created_at'])) ?></td>
+                    </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
