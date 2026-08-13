@@ -1,32 +1,3 @@
-<?php
-require_once __DIR__ . '/../../../middleware/CsrfMiddleware.php';
-$pageTitle = "Thêm danh mục";
-require_once __DIR__ . "/../../../dao/CategoryDAO.php";
-$dao = new CategoryDAO();
-$errors = [];
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    CsrfMiddleware::verify();
-    $cateName = trim($_POST["cateName"] ?? "");
-    $slug = trim($_POST["slug"] ?? "");
-    $description = trim($_POST["description"] ?? "");
-    $status = $_POST["status"] ?? 1;
-
-    if ($cateName == "") $errors[] = "Tên danh mục không được để trống.";
-    if ($slug == "") $errors[] = "Slug không được để trống.";
-
-    if (empty($errors)) {
-        $cat = new Category($cateName, $slug, null, $description, $status);
-        if ($dao->insert($cat)) {
-            header("Location: index.php");
-            exit;
-        } else {
-            $errors[] = "Thêm thất bại.";
-        }
-    }
-}
-ob_start();
-?>
 <h2>Thêm danh mục</h2>
 <?php if (!empty($errors)): ?>
     <div class="alert alert-danger"><?= implode("<br>", $errors) ?></div>
@@ -51,6 +22,6 @@ ob_start();
         <input type="radio" name="status" value="0"> Ẩn
     </div>
     <button type="submit" class="btn btn-primary">Lưu</button>
-    <a href="index.php" class="btn btn-secondary">Quay lại</a>
+    <a href="/MiniShop_NguyenNghiaNhan/admin/category" class="btn btn-secondary">Quay lại</a>
 </form>
 <?php $content = ob_get_clean(); include __DIR__ . "/../layouts/master.php"; ?>

@@ -1,28 +1,5 @@
-<?php
-$pageTitle = "Danh sách danh mục";
-require_once __DIR__ . "/../../../dao/CategoryDAO.php";
-$dao = new CategoryDAO();
-
-if (isset($_POST["btnDelete"])) {
-    $dao->delete((int)$_POST["id"]);
-}
-
-$keyword = trim($_GET["keyword"] ?? "");
-$limit = (int)($_GET["limit"] ?? 10);
-$page = (int)($_GET["page"] ?? 1);
-$sort = trim($_GET["sort"] ?? "");
-
-$offset = ($page - 1) * $limit;
-
-// CategoryDAO count function can just use catename for search
-$totalRecords = $dao->count("categories", "catename", $keyword);
-$totalPages = ceil($totalRecords / $limit);
-
-$categories = $dao->getPage($limit, $offset, $keyword, $sort);
-ob_start();
-?>
 <h2>Danh sách danh mục</h2>
-<a href="create.php" class="btn btn-success mb-3">Thêm mới</a>
+<a href="/MiniShop_NguyenNghiaNhan/admin/category/create" class="btn btn-success mb-3">Thêm mới</a>
 
 <form class="row mb-3" method="GET">
     <div class="col-md-3">
@@ -68,8 +45,8 @@ ob_start();
                 <td><?= htmlspecialchars($item->slug) ?></td>
                 <td><?= $item->status == 1 ? "<span class=\"badge bg-success\">Hiển thị</span>" : "<span class=\"badge bg-secondary\">Ẩn</span>" ?></td>
                 <td>
-                    <a href="detail.php?id=<?= $item->id ?>" class="btn btn-info btn-sm">Chi tiết</a>
-                    <a href="edit.php?id=<?= $item->id ?>" class="btn btn-warning btn-sm">Sửa</a>
+                    <a href="/MiniShop_NguyenNghiaNhan/admin/category/detail/<?= $item->id ?>" class="btn btn-info btn-sm">Chi tiết</a>
+                    <a href="/MiniShop_NguyenNghiaNhan/admin/category/edit/<?= $item->id ?>" class="btn btn-warning btn-sm">Sửa</a>
                     <form method="POST" class="d-inline" onsubmit="return confirm('Xóa?');">
                         <input type="hidden" name="id" value="<?= $item->id ?>">
                         <button type="submit" name="btnDelete" class="btn btn-danger btn-sm">Xóa</button>

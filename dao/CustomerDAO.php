@@ -1,15 +1,9 @@
 <?php
-require_once __DIR__ . "/BaseDAO.php";
+namespace DAO;
 
-class Customer {
-    public int $id = 0;
-    public function __construct(
-        public string $fullname,
-        public string $phone,
-        public ?string $email,
-        public ?string $address
-    ) {}
-}
+use Config\Database;
+use Models\Customer;
+
 
 class CustomerDAO extends BaseDAO {
     public function getPage(int $limit, int $offset, string $keyword = "", string $sort = ""): array {

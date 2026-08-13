@@ -1,95 +1,3 @@
-<?php
-require_once __DIR__ . '/../../../middleware/CsrfMiddleware.php';
-$pageTitle = "Cập nhật sản phẩm";
-require_once __DIR__ . "/../../../dao/ProductDAO.php";
-require_once __DIR__ . "/../../../dao/CategoryDAO.php";
-require_once __DIR__ . "/../../../dao/BrandDAO.php";
-$dao = new ProductDAO();
-$catDao = new CategoryDAO();
-$brandDao = new BrandDAO();
-
-$id = $_GET["id"] ?? 0;
-$product = $dao->findById($id);
-if (!$product) die("Không tìm thấy sản phẩm");
-
-if (isset($_GET["del_img"])) {
-    $imgId = (int)$_GET["del_img"];
-    $dao->deleteImage($imgId);
-    header("Location: edit.php?id=$id"); exit;
-}
-
-$categories = $catDao->getAll();
-$brands = $brandDao->getAll();
-$gallery = $dao->getImagesByProductId($id);
-$errors = [];
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    CsrfMiddleware::verify();
-    $proname = trim($_POST["productName"] ?? "");
-    $slug = trim($_POST["slug"] ?? "");
-    $categoryId = (int)($_POST["categoryId"] ?? 0);
-    $brandId = (int)($_POST["brandId"] ?? 0);
-    $price = (float)($_POST["price"] ?? 0);
-    $discount_price = (float)($_POST["discount_price"] ?? 0);
-    $quantity = (int)($_POST["quantity"] ?? 0);
-
-    $fileName = $_FILES["image"]["name"] ?? "";
-    $tmpName = $_FILES["image"]["tmp_name"] ?? "";
-    $fileSize = $_FILES["image"]["size"] ?? 0;
-    $error = $_FILES["image"]["error"] ?? 0;
-    $image = $product->image;
-
-    if ($proname == "") $errors[] = "Tên không được trống";
-    if ($categoryId == 0) $errors[] = "Chọn danh mục";
-
-    if ($fileName != "") {
-        if ($error != UPLOAD_ERR_OK) $errors[] = "Upload hình ảnh không thành công.";
-        $allowExtensions = ["jpg", "jpeg", "png", "gif", "webp"];
-        $extension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
-        if (!in_array($extension, $allowExtensions)) $errors[] = "Chỉ cho phép file JPG, JPEG, PNG hoặc WEBP.";
-        $maxSize = 200 * 1024;
-        if ($fileSize > $maxSize) $errors[] = "Kích thước hình ảnh <= 200 KB.";
-    }
-
-    if (empty($errors)) {
-        if ($fileName != "") {
-            $image = time() . "_" . $slug . "." . $extension;
-            $uploadPath = __DIR__ . "/../../../uploads/products/" . $image;
-            if (!empty($product->image)) {
-                $oldImage = __DIR__ . "/../../../uploads/products/" . $product->image;
-                if (file_exists($oldImage)) unlink($oldImage);
-            }
-            move_uploaded_file($tmpName, $uploadPath);
-        }
-
-        $product->proname = $proname;
-        $product->slug = $slug;
-        $product->category_id = $categoryId;
-        $product->brand_id = $brandId;
-        $product->price = $price;
-        $product->discount_price = $discount_price;
-        $product->quantity = $quantity;
-        $product->image = $image;
-        
-        if ($dao->update($product)) {
-            if (!empty($_FILES["images"]["name"][0])) {
-                foreach ($_FILES["images"]["name"] as $key => $gName) {
-                    if ($_FILES["images"]["error"][$key] == UPLOAD_ERR_OK) {
-                        $gExt = strtolower(pathinfo($gName, PATHINFO_EXTENSION));
-                        $gImage = time() . "_" . $key . "_" . $slug . "." . $gExt;
-                        $gPath = __DIR__ . "/../../../uploads/products/" . $gImage;
-                        if (move_uploaded_file($_FILES["images"]["tmp_name"][$key], $gPath)) {
-                            $dao->insertImage($id, $gImage);
-                        }
-                    }
-                }
-            }
-            header("Location: index.php"); exit;
-        } else $errors[] = "Cập nhật thất bại.";
-    }
-}
-ob_start();
-?>
 <h2>Cập nhật sản phẩm</h2>
 <?php if (!empty($errors)): ?><div class="alert alert-danger"><?= implode("<br>", $errors) ?></div><?php endif; ?>
 <form method="POST" enctype="multipart/form-data">
@@ -137,7 +45,7 @@ ob_start();
         <?php foreach($gallery as $g): ?>
             <div class="d-inline-block text-center m-1">
                 <img src="/MiniShop_NguyenNghiaNhan/uploads/products/<?= $g["image"] ?>" class="img-thumbnail" width="100"><br>
-                <a href="edit.php?id=<?= $id ?>&del_img=<?= $g["id"] ?>" class="btn btn-sm btn-danger mt-1" onclick="return confirm('Xóa hình này?')">Xóa</a>
+                <a href="/MiniShop_NguyenNghiaNhan/admin/product/edit/<?= $id ?>&del_img=<?= $g["id"] ?>" class="btn btn-sm btn-danger mt-1" onclick="return confirm('Xóa hình này?')">Xóa</a>
             </div>
         <?php endforeach; ?>
         <div id="preview-gallery" class="mt-2"></div>
@@ -148,6 +56,6 @@ ob_start();
     </div>
 
     <button type="submit" class="btn btn-primary">Lưu</button>
-    <a href="index.php" class="btn btn-secondary">Quay lại</a>
+    <a href="/MiniShop_NguyenNghiaNhan/admin/product" class="btn btn-secondary">Quay lại</a>
 </form>
 <?php $content = ob_get_clean(); include __DIR__ . "/../layouts/master.php"; ?>

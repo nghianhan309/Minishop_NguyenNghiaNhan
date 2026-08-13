@@ -4,7 +4,7 @@
 ob_start();
 ?>
 <h2>Danh sách sản phẩm</h2>
-<a href="create.php" class="btn btn-success mb-3">Thêm mới</a>
+<a href="/MiniShop_NguyenNghiaNhan/admin/product/create" class="btn btn-success mb-3">Thêm mới</a>
 
 <form class="row mb-3" method="GET">
     <input type="hidden" name="controller" value="product">
@@ -62,8 +62,8 @@ ob_start();
                 <td><?= htmlspecialchars($item->brandName) ?></td>
                 <td><?= number_format($item->price) ?> đ</td>
                 <td>
-                    <a href="detail.php?id=<?= $item->id ?>" class="btn btn-info btn-sm">Chi tiết</a>
-                    <a href="edit.php?id=<?= $item->id ?>" class="btn btn-warning btn-sm">Sửa</a>
+                    <a href="/MiniShop_NguyenNghiaNhan/admin/product/detail/<?= $item->id ?>" class="btn btn-info btn-sm">Chi tiết</a>
+                    <a href="/MiniShop_NguyenNghiaNhan/admin/product/edit/<?= $item->id ?>" class="btn btn-warning btn-sm">Sửa</a>
                     <form method="POST" class="d-inline" onsubmit="return confirm('Xóa?');">
                         <input type="hidden" name="id" value="<?= $item->id ?>">
                         <button type="submit" name="btnDelete" class="btn btn-danger btn-sm">Xóa</button>

@@ -76,5 +76,3 @@ class AuthController
         header("Location: /MiniShop_NguyenNghiaNhan/admin/auth/login");
         exit;
     }
-}
-?>

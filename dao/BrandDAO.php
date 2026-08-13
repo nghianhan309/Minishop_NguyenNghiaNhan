@@ -1,16 +1,9 @@
 <?php
-require_once __DIR__ . "/BaseDAO.php";
+namespace DAO;
 
-class Brand {
-    public int $id = 0;
-    public function __construct(
-        public string $name,
-        public ?string $slug,
-        public ?string $image,
-        public ?string $description,
-        public int $status
-    ) {}
-}
+use Config\Database;
+use Models\Brand;
+
 
 class BrandDAO extends BaseDAO {
     public function getPage(int $limit, int $offset, string $keyword = "", string $sort = ""): array {

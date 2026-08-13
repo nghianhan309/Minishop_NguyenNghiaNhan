@@ -1,11 +1,3 @@
-<?php
-$pageTitle = "Chi tiết danh mục";
-require_once __DIR__ . "/../../../dao/CategoryDAO.php";
-$dao = new CategoryDAO();
-$category = $dao->findById($_GET["id"] ?? 0);
-if (!$category) die("Không tìm thấy");
-ob_start();
-?>
 <h2>Chi tiết danh mục</h2>
 <ul>
     <li>ID: <?= $category->id ?></li>
@@ -15,5 +7,5 @@ ob_start();
     <li>Mô tả: <?= htmlspecialchars($category->description) ?></li>
     <li>Ngày tạo: <?= $category->createdAt ?></li>
 </ul>
-<a href="index.php" class="btn btn-secondary">Quay lại</a>
+<a href="/MiniShop_NguyenNghiaNhan/admin/category" class="btn btn-secondary">Quay lại</a>
 <?php $content = ob_get_clean(); include "../layouts/master.php"; ?>

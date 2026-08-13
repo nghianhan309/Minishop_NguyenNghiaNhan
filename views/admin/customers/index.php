@@ -1,22 +1,5 @@
-<?php
-$pageTitle = "Quản lý khách hàng";
-require_once __DIR__ . "/../../../dao/CustomerDAO.php";
-$dao = new CustomerDAO();
-
-$keyword = trim($_GET["keyword"] ?? "");
-$limit = (int)($_GET["limit"] ?? 10);
-$page = (int)($_GET["page"] ?? 1);
-$sort = trim($_GET["sort"] ?? "");
-
-$offset = ($page - 1) * $limit;
-$totalRecords = $dao->count("customers", "fullname", $keyword);
-$totalPages = ceil($totalRecords / $limit);
-$customers = $dao->getPage($limit, $offset, $keyword, $sort);
-
-ob_start();
-?>
 <h2>Danh sách khách hàng</h2>
-<a href="create.php" class="btn btn-success mb-3">Thêm mới</a>
+<a href="/MiniShop_NguyenNghiaNhan/admin/customer/create" class="btn btn-success mb-3">Thêm mới</a>
 <form class="row mb-3" method="GET">
     <div class="col-md-4">
         <input type="text" name="keyword" class="form-control" placeholder="Tên khách hàng..." value="<?= htmlspecialchars($keyword) ?>">
@@ -58,7 +41,7 @@ ob_start();
             <td><?= htmlspecialchars($item->phone) ?></td>
             <td><?= htmlspecialchars((string)$item->email) ?></td>
             <td>
-                <a href="edit.php?id=<?= $item->id ?>" class="btn btn-warning btn-sm">Sửa</a>
+                <a href="/MiniShop_NguyenNghiaNhan/admin/customer/edit/<?= $item->id ?>" class="btn btn-warning btn-sm">Sửa</a>
                 <form action="delete.php" method="POST" class="d-inline" onsubmit="return confirm('Bạn có chắc chắn muốn xóa không?')"><input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION["csrf_token"] ?? "") ?>"><input type="hidden" name="id" value="<?= $item->id ?>"><button type="submit" class="btn btn-danger btn-sm">Xóa</button></form>
             </td>
         </tr>

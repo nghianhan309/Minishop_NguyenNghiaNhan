@@ -1,12 +1,3 @@
-<?php
-$pageTitle = "Chi tiết sản phẩm";
-require_once __DIR__ . "/../../../dao/ProductDAO.php";
-$dao = new ProductDAO();
-$product = $dao->findById($_GET["id"] ?? 0);
-if (!$product) die("Không tìm thấy");
-$gallery = $dao->getImagesByProductId($product->id);
-ob_start();
-?>
 <h2>Chi tiết sản phẩm</h2>
 <div class="row">
     <div class="col-md-4">
@@ -35,5 +26,5 @@ ob_start();
         </ul>
     </div>
 </div>
-<a href="index.php" class="btn btn-secondary mt-3">Quay lại</a>
+<a href="/MiniShop_NguyenNghiaNhan/admin/product" class="btn btn-secondary mt-3">Quay lại</a>
 <?php $content = ob_get_clean(); include __DIR__ . "/../layouts/master.php"; ?>

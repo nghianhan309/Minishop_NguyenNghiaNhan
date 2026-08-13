@@ -1,28 +1,3 @@
-<?php
-require_once __DIR__ . "/../../dao/CategoryDAO.php";
-require_once __DIR__ . "/../../dao/BrandDAO.php";
-require_once __DIR__ . "/../../dao/ProductDAO.php";
-require_once __DIR__ . "/../../dao/CustomerDAO.php";
-require_once __DIR__ . "/../../dao/OrderDAO.php";
-
-$categoryDAO = new CategoryDAO();
-$brandDAO = new BrandDAO();
-$productDAO = new ProductDAO();
-$customerDAO = new CustomerDAO();
-$orderDAO = new OrderDAO();
-
-$totalCategories = $categoryDAO->getTotalCount();
-$totalBrands = $brandDAO->getTotalCount();
-$totalProducts = $productDAO->getTotalCount();
-$totalCustomers = $customerDAO->getTotalCount();
-$totalOrders = $orderDAO->getTotalCount();
-
-$newestProducts = $productDAO->getNewestProducts(5);
-$newestOrders = $orderDAO->getNewestOrders(5);
-
-$pageTitle = "Dashboard";
-ob_start();
-?>
 <div class="mt-3">
     <?php  ?>
 </div>

@@ -1,21 +1,3 @@
-<?php
-$pageTitle = "Quản lý đơn hàng";
-require_once __DIR__ . "/../../../dao/OrderDAO.php";
-$dao = new OrderDAO();
-
-$keyword = trim($_GET["keyword"] ?? "");
-$status = $_GET["status"] ?? "";
-$limit = (int)($_GET["limit"] ?? 10);
-$page = (int)($_GET["page"] ?? 1);
-$sort = trim($_GET["sort"] ?? "");
-
-$offset = ($page - 1) * $limit;
-$totalRecords = $dao->countOrder($keyword, $status);
-$totalPages = ceil($totalRecords / $limit);
-
-$orders = $dao->getPage($limit, $offset, $keyword, $status, $sort);
-ob_start();
-?>
 <h2>Danh sách đơn hàng</h2>
 <form class="row mb-3" method="GET">
     <div class="col-md-3">
@@ -83,7 +65,7 @@ ob_start();
                     ?>
                 </td>
                 <td>
-                    <a href="detail.php?id=<?= $o["id"] ?>" class="btn btn-info btn-sm">Chi tiết</a>
+                    <a href="/MiniShop_NguyenNghiaNhan/admin/order/detail/<?= $o["id"] ?>" class="btn btn-info btn-sm">Chi tiết</a>
                 </td>
             </tr>
             <?php endforeach; ?>
