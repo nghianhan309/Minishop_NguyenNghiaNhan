@@ -21,7 +21,7 @@ class AuthMiddleware
         }
 
         if (!isset($_SESSION["user"])) {
-            header("Location: index.php?area=admin&controller=auth&action=login");
+            header("Location: /MiniShop_NguyenNghiaNhan/admin/auth/login");
             exit;
         }
     }

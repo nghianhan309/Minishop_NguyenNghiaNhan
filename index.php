@@ -9,8 +9,23 @@ if (isset($_SESSION["user"]) && $_SESSION["user"] instanceof __PHP_Incomplete_Cl
 }
 
 
+// URL Routing (Parse URI if using .htaccess)
+$uri = $_SERVER['REQUEST_URI'];
+$basePath = '/MiniShop_NguyenNghiaNhan/';
+if (strpos($uri, $basePath) === 0) {
+    $path = substr($uri, strlen($basePath));
+    $path = parse_url($path, PHP_URL_PATH);
+    if ($path && $path !== 'index.php') {
+        $segments = explode('/', trim($path, '/'));
+        if (isset($segments[0])) $_GET['area'] = $segments[0];
+        if (isset($segments[1])) $_GET['controller'] = $segments[1];
+        if (isset($segments[2])) $_GET['action'] = $segments[2];
+        if (isset($segments[3])) $_GET['id'] = $segments[3];
+    }
+}
+
 $area = $_GET["area"] ?? "admin"; // default to admin for this lab context, although PDF says client
-$controller = $_GET["controller"] ?? "product";
+$controller = $_GET["controller"] ?? "dashboard";
 $action = $_GET["action"] ?? "index";
 
 // Xác định tên Controller

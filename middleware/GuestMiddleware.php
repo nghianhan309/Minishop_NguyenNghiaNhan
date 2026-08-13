@@ -21,7 +21,7 @@ class GuestMiddleware
         }
 
         if (isset($_SESSION["user"])) {
-            header("Location: index.php?area=admin&controller=product&action=index");
+            header("Location: /MiniShop_NguyenNghiaNhan/admin/dashboard");
             exit;
         }
     }

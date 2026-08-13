@@ -59,7 +59,7 @@ class AuthController
             setcookie("remember_token", md5($user->username . $user->password), time() + (86400 * 30), "/");
         }
 
-        header("Location: index.php?area=admin&controller=product&action=index");
+        header("Location: /MiniShop_NguyenNghiaNhan/admin/dashboard");
         exit;
     }
     
@@ -73,7 +73,7 @@ class AuthController
         setcookie("remember_user", "", time() - 3600, "/");
         setcookie("remember_token", "", time() - 3600, "/");
 
-        header("Location: index.php?area=admin&controller=auth&action=login");
+        header("Location: /MiniShop_NguyenNghiaNhan/admin/auth/login");
         exit;
     }
 }
