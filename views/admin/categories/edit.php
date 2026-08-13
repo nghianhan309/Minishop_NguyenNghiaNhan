@@ -25,4 +25,4 @@
     <button type="submit" class="btn btn-primary">Lưu</button>
     <a href="/MiniShop_NguyenNghiaNhan/admin/category" class="btn btn-secondary">Quay lại</a>
 </form>
-<?php $content = ob_get_clean(); include "../layouts/master.php"; ?>
+<?php $content = ob_get_clean(); include __DIR__ . "/../layouts/master.php"; ?>

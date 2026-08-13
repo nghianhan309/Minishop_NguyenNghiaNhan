@@ -8,4 +8,4 @@
     <li>Ngày tạo: <?= $category->createdAt ?></li>
 </ul>
 <a href="/MiniShop_NguyenNghiaNhan/admin/category" class="btn btn-secondary">Quay lại</a>
-<?php $content = ob_get_clean(); include "../layouts/master.php"; ?>
+<?php $content = ob_get_clean(); include __DIR__ . "/../layouts/master.php"; ?>
