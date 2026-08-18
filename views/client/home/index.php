@@ -25,7 +25,7 @@
                     </div>
                     <h5 class="card-title fw-bold">
                         <a href="<?= BASE_URL ?>category/<?= $category->slug ?>" class="text-decoration-none text-dark stretched-link">
-                            <?= htmlspecialchars($category->catename) ?>
+                            <?= htmlspecialchars($category->name) ?>
                         </a>
                     </h5>
                     <p class="text-muted small mb-0"><?= htmlspecialchars($category->description) ?></p>

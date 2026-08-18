@@ -28,7 +28,7 @@ $brands = $headerData['brands'];
                         <?php foreach ($categories as $category): ?>
                         <li>
                             <a class="dropdown-item" href="<?= BASE_URL ?>category/<?= $category->slug ?>">
-                                <?= htmlspecialchars($category->catename) ?>
+                                <?= htmlspecialchars($category->name) ?>
                             </a>
                         </li>
                         <?php endforeach; ?>
