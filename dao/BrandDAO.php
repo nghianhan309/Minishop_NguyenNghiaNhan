@@ -6,6 +6,25 @@ use Models\Brand;
 
 
 class BrandDAO extends BaseDAO {
+    public function getByLimit(int $limit = 5): array {
+        $list = [];
+        try {
+            $sql = "SELECT * FROM brands ORDER BY id ASC LIMIT ?";
+            $stmt = $this->prepare($sql);
+            $stmt->bind_param("i", $limit);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            while ($row = $result->fetch_assoc()) {
+                $b = new Brand($row["brandname"], $row["slug"] ?? null, $row["image"] ?? null, $row["description"] ?? null, $row["status"] ?? 1);
+                $b->id = $row["id"];
+                $list[] = $b;
+            }
+        } catch (\Exception $e) {
+            error_log("Lỗi BrandDAO->getByLimit: " . $e->getMessage());
+        }
+        return $list;
+    }
+
     public function getPage(int $limit, int $offset, string $keyword = "", string $sort = ""): array {
         $list = [];
         $sql = "SELECT * FROM brands";

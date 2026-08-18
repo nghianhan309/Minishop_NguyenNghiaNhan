@@ -6,6 +6,11 @@ RewriteCond %{REQUEST_FILENAME} -f [OR]
 RewriteCond %{REQUEST_FILENAME} -d
 RewriteRule ^ - [L]
 
+# Route cho danh mục, thương hiệu, sản phẩm
+RewriteRule ^category/([^/]+)/?$ index.php?area=client&controller=product&action=category&slug=$1 [L,QSA]
+RewriteRule ^brand/([^/]+)/?$ index.php?area=client&controller=product&action=brand&slug=$1 [L,QSA]
+RewriteRule ^product/([^/]+)/?$ index.php?area=client&controller=product&action=detail&slug=$1 [L,QSA]
+
 # Đưa mọi request về Entry Point index.php
 RewriteRule ^(admin|client)/([a-zA-Z0-9_-]+)/([a-zA-Z0-9_-]+)/([0-9]+)$ index.php?area=$1&controller=$2&action=$3&id=$4 [QSA,L]
 RewriteRule ^(admin|client)/([a-zA-Z0-9_-]+)/([a-zA-Z0-9_-]+)$ index.php?area=$1&controller=$2&action=$3 [QSA,L]

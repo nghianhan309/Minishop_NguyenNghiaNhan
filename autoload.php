@@ -6,6 +6,7 @@ spl_autoload_register(function ($className) {
         'Models\\' => __DIR__ . '/models/',
         'Middleware\\' => __DIR__ . '/middleware/',
         'Config\\' => __DIR__ . '/config/',
+        'Composers\\' => __DIR__ . '/composers/',
     ];
     
     foreach ($prefixes as $prefix => $baseDir) {
@@ -23,4 +24,7 @@ spl_autoload_register(function ($className) {
         }
     }
 });
+
+define('BASE_URL', '/MiniShop_NguyenNghiaNhan/');
+define('PRODUCT_IMAGE_URL', BASE_URL . 'uploads/products/');
 ?>

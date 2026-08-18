@@ -10,6 +10,25 @@ class CategoryDAO extends BaseDAO
 {
     public function __construct() { parent::__construct(); }
 
+    public function getByLimit(int $limit = 5): array {
+        $list = [];
+        try {
+            $sql = "SELECT * FROM categories ORDER BY id ASC LIMIT ?";
+            $stmt = $this->prepare($sql);
+            $stmt->bind_param("i", $limit);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            while ($row = $result->fetch_assoc()) {
+                $category = new Category($row["catename"], $row["slug"], $row["image"], $row["description"], $row["status"]);
+                $category->id = $row["id"];
+                $list[] = $category;
+            }
+        } catch (\Exception $e) {
+            error_log("Lỗi CategoryDAO->getByLimit: " . $e->getMessage());
+        }
+        return $list;
+    }
+
     public function getAll($keyword = ""): array {
         $list = [];
         try {

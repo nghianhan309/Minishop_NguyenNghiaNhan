@@ -6,6 +6,138 @@ use Models\Product;
 class ProductDAO extends BaseDAO {
     public function __construct() { parent::__construct(); }
 
+    public function getDiscountProducts(int $limit = 8): array {
+        $list = [];
+        $sql = "SELECT p.*, c.catename as cateName, b.brandname as brandName 
+                FROM products p 
+                INNER JOIN categories c ON p.category_id = c.id 
+                INNER JOIN brands b ON p.brand_id = b.id
+                WHERE p.discount_price < p.price
+                ORDER BY (p.price - p.discount_price) DESC LIMIT ?";
+        $stmt = $this->prepare($sql);
+        $stmt->bind_param("i", $limit);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        while ($row = $result->fetch_assoc()) {
+            $p = new Product($row["category_id"], $row["brand_id"], $row["proname"], $row["slug"], $row["price"], $row["discount_price"], $row["quantity"], $row["description"], $row["image"], $row["status"]);
+            $p->id = $row["id"];
+            $p->cateName = $row["cateName"];
+            $p->brandName = $row["brandName"];
+            $list[] = $p;
+        }
+        return $list;
+    }
+
+    public function getNewProducts(int $limit = 4): array {
+        $list = [];
+        $sql = "SELECT p.*, c.catename as cateName, b.brandname as brandName 
+                FROM products p 
+                INNER JOIN categories c ON p.category_id = c.id 
+                INNER JOIN brands b ON p.brand_id = b.id
+                ORDER BY p.id DESC LIMIT ?";
+        $stmt = $this->prepare($sql);
+        $stmt->bind_param("i", $limit);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        while ($row = $result->fetch_assoc()) {
+            $p = new Product($row["category_id"], $row["brand_id"], $row["proname"], $row["slug"], $row["price"], $row["discount_price"], $row["quantity"], $row["description"], $row["image"], $row["status"]);
+            $p->id = $row["id"];
+            $p->cateName = $row["cateName"];
+            $p->brandName = $row["brandName"];
+            $list[] = $p;
+        }
+        return $list;
+    }
+
+    public function getByCategory(string $slug): array {
+        $list = [];
+        $sql = "SELECT p.*, c.catename as cateName, b.brandname as brandName 
+                FROM products p 
+                INNER JOIN categories c ON p.category_id = c.id 
+                INNER JOIN brands b ON p.brand_id = b.id
+                WHERE c.slug = ?
+                ORDER BY p.id DESC";
+        $stmt = $this->prepare($sql);
+        $stmt->bind_param("s", $slug);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        while ($row = $result->fetch_assoc()) {
+            $p = new Product($row["category_id"], $row["brand_id"], $row["proname"], $row["slug"], $row["price"], $row["discount_price"], $row["quantity"], $row["description"], $row["image"], $row["status"]);
+            $p->id = $row["id"];
+            $p->cateName = $row["cateName"];
+            $p->brandName = $row["brandName"];
+            $list[] = $p;
+        }
+        return $list;
+    }
+
+    public function getByBrand(string $slug): array {
+        $list = [];
+        $sql = "SELECT p.*, c.catename as cateName, b.brandname as brandName 
+                FROM products p 
+                INNER JOIN categories c ON p.category_id = c.id 
+                INNER JOIN brands b ON p.brand_id = b.id
+                WHERE b.slug = ?
+                ORDER BY p.id DESC";
+        $stmt = $this->prepare($sql);
+        $stmt->bind_param("s", $slug);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        while ($row = $result->fetch_assoc()) {
+            $p = new Product($row["category_id"], $row["brand_id"], $row["proname"], $row["slug"], $row["price"], $row["discount_price"], $row["quantity"], $row["description"], $row["image"], $row["status"]);
+            $p->id = $row["id"];
+            $p->cateName = $row["cateName"];
+            $p->brandName = $row["brandName"];
+            $list[] = $p;
+        }
+        return $list;
+    }
+
+    public function getBySlug(string $slug): ?Product {
+        $sql = "SELECT p.*, c.catename as cateName, b.brandname as brandName, c.slug as category_slug, b.slug as brand_slug 
+                FROM products p 
+                INNER JOIN categories c ON p.category_id = c.id 
+                INNER JOIN brands b ON p.brand_id = b.id
+                WHERE p.slug = ?";
+        $stmt = $this->prepare($sql);
+        $stmt->bind_param("s", $slug);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if ($row = $result->fetch_assoc()) {
+            $p = new Product($row["category_id"], $row["brand_id"], $row["proname"], $row["slug"], $row["price"], $row["discount_price"], $row["quantity"], $row["description"], $row["image"], $row["status"]);
+            $p->id = $row["id"];
+            $p->cateName = $row["cateName"];
+            $p->brandName = $row["brandName"];
+            $p->category_slug = $row["category_slug"];
+            $p->brand_slug = $row["brand_slug"];
+            return $p;
+        }
+        return null;
+    }
+    
+    public function search(string $keyword): array {
+        $list = [];
+        $sql = "SELECT p.*, c.catename as cateName, b.brandname as brandName 
+                FROM products p 
+                INNER JOIN categories c ON p.category_id = c.id 
+                INNER JOIN brands b ON p.brand_id = b.id
+                WHERE p.proname LIKE ? OR c.catename LIKE ? OR b.brandname LIKE ?
+                ORDER BY p.id DESC";
+        $stmt = $this->prepare($sql);
+        $kw = "%" . $keyword . "%";
+        $stmt->bind_param("sss", $kw, $kw, $kw);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        while ($row = $result->fetch_assoc()) {
+            $p = new Product($row["category_id"], $row["brand_id"], $row["proname"], $row["slug"], $row["price"], $row["discount_price"], $row["quantity"], $row["description"], $row["image"], $row["status"]);
+            $p->id = $row["id"];
+            $p->cateName = $row["cateName"];
+            $p->brandName = $row["brandName"];
+            $list[] = $p;
+        }
+        return $list;
+    }
+
     public function getAll($keyword = ""): array {
         $list = [];
         $sql = "SELECT p.*, c.catename as cateName, b.brandname as brandName 

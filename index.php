@@ -5,8 +5,8 @@ session_start();
 
 
 
-$area = $_GET["area"] ?? "admin"; // default to admin for this lab context, although PDF says client
-$controller = $_GET["controller"] ?? "dashboard";
+$area = $_GET["area"] ?? "client";
+$controller = $_GET["controller"] ?? "home";
 $action = $_GET["action"] ?? "index";
 
 // Xác định tên Controller
