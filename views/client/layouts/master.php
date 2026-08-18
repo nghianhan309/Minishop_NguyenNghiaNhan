@@ -12,6 +12,12 @@
         .product-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important; }
         .btn-buy { transition: all 0.2s; }
         .btn-buy:hover { background-color: #0056b3; color: #fff; }
+        /* Dropdown hover cho desktop */
+        @media all and (min-width: 992px) {
+            .navbar .nav-item .dropdown-menu { display: none; }
+            .navbar .nav-item:hover .nav-link { color: #ffc107; }
+            .navbar .nav-item:hover .dropdown-menu { display: block; margin-top: 0; }
+        }
     </style>
 </head>
 <body>
