@@ -12,12 +12,14 @@
             </div>
             
             <div class="col-md-4 mb-4">
-                <h5 class="mb-3">Thông tin</h5>
+                <h5 class="mb-3">Danh mục nổi bật</h5>
                 <ul class="list-unstyled">
-                    <li class="mb-2"><a href="#" class="text-white-50 text-decoration-none hover-white">Giới thiệu</a></li>
-                    <li class="mb-2"><a href="#" class="text-white-50 text-decoration-none hover-white">Chính sách bảo mật</a></li>
-                    <li class="mb-2"><a href="#" class="text-white-50 text-decoration-none hover-white">Chính sách đổi trả</a></li>
-                    <li class="mb-2"><a href="#" class="text-white-50 text-decoration-none hover-white">Điều khoản dịch vụ</a></li>
+                    <li class="mb-2"><a href="<?= BASE_URL ?>products" class="text-white-50 text-decoration-none hover-white"><i class="bi bi-chevron-right small me-1"></i> Tất cả sản phẩm</a></li>
+                    <?php if (isset($categories)): ?>
+                        <?php foreach (array_slice($categories, 0, 4) as $cat): ?>
+                        <li class="mb-2"><a href="<?= BASE_URL ?>category/<?= $cat->slug ?>" class="text-white-50 text-decoration-none hover-white"><i class="bi bi-chevron-right small me-1"></i> <?= htmlspecialchars($cat->name) ?></a></li>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 </ul>
             </div>
             

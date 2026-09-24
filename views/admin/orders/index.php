@@ -1,7 +1,7 @@
 <h2>Danh sách đơn hàng</h2>
 <form class="row mb-3" method="GET">
     <div class="col-md-3">
-        <input type="text" name="keyword" class="form-control" placeholder="Mã đơn / Tên KH..." value="<?= htmlspecialchars($keyword) ?>">
+        <input type="text" name="keyword" class="form-control" placeholder="Mã đơn / Tên KH / SĐT..." value="<?= htmlspecialchars($keyword) ?>">
         <input type="hidden" name="limit" value="<?= $limit ?>">
     </div>
     <div class="col-md-3">

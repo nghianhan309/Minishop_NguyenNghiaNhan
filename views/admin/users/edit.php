@@ -1,4 +1,4 @@
-<h2>Sửa Người Dùng</h2>
+<h2>Sửa Quản trị viên / Nhân viên</h2>
 <form method="POST">
     <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION["csrf_token"] ?? "") ?>">
     <div class="mb-3"><label>Họ tên</label><input type="text" name="fullname" class="form-control" value="<?= htmlspecialchars($b->fullname) ?>" required></div>

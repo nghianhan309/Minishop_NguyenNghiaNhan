@@ -294,5 +294,33 @@ class ProductDAO extends BaseDAO {
         $stmt->bind_param("i", $id);
         return $stmt->execute();
     }
+    
+    // VARIANTS (ML)
+    public function insertVariant(int $productId, string $volume, float $price, float $discountPrice): bool {
+        $sql = "INSERT INTO product_variants(product_id, volume, price, discount_price) VALUES (?, ?, ?, ?)";
+        $stmt = $this->prepare($sql);
+        $stmt->bind_param("isdd", $productId, $volume, $price, $discountPrice);
+        return $stmt->execute();
+    }
+
+    public function getVariantsByProductId(int $productId): array {
+        $list = [];
+        $sql = "SELECT * FROM product_variants WHERE product_id = ? ORDER BY price ASC";
+        $stmt = $this->prepare($sql);
+        $stmt->bind_param("i", $productId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        while ($row = $result->fetch_assoc()) {
+            $list[] = $row;
+        }
+        return $list;
+    }
+
+    public function deleteVariantsByProductId(int $productId): bool {
+        $sql = "DELETE FROM product_variants WHERE product_id=?";
+        $stmt = $this->prepare($sql);
+        $stmt->bind_param("i", $productId);
+        return $stmt->execute();
+    }
 }
 ?>

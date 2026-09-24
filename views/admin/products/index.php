@@ -45,7 +45,7 @@ ob_start();
     <div class="alert alert-warning">Không tìm thấy sản phẩm.</div>
 <?php else: ?>
     <table class="table table-bordered table-hover">
-        <thead class="table-light"><tr><th>ID</th><th>Hình ảnh</th><th>Tên</th><th>Danh mục</th><th>Thương hiệu</th><th>Giá</th><th>Chức năng</th></tr></thead>
+        <thead class="table-light"><tr><th>ID</th><th>Hình ảnh</th><th>Tên</th><th>Danh mục</th><th>Thương hiệu</th><th>Giá</th><th>Số lượng</th><th>Chức năng</th></tr></thead>
         <tbody>
             <?php foreach ($products as $item): ?>
             <tr>
@@ -61,6 +61,13 @@ ob_start();
                 <td><?= htmlspecialchars($item->cateName) ?></td>
                 <td><?= htmlspecialchars($item->brandName) ?></td>
                 <td><?= number_format($item->price) ?> đ</td>
+                <td>
+                    <?php if ($item->quantity > 0): ?>
+                        <span class="badge bg-success"><?= $item->quantity ?></span>
+                    <?php else: ?>
+                        <span class="badge bg-danger">Hết hàng</span>
+                    <?php endif; ?>
+                </td>
                 <td>
                     <a href="/MiniShop_NguyenNghiaNhan/admin/product/detail/<?= $item->id ?>" class="btn btn-info btn-sm">Chi tiết</a>
                     <a href="/MiniShop_NguyenNghiaNhan/admin/product/edit/<?= $item->id ?>" class="btn btn-warning btn-sm">Sửa</a>

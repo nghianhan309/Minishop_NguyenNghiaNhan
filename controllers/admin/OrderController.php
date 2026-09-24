@@ -37,10 +37,26 @@ $order = $dao->findById($id);
 if (!$order) die("Không tìm thấy đơn hàng");
 
 
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["btnUpdateStatus"])) {
-    $dao->updateStatus($id, (int)$_POST["status"]);
-    $_SESSION["success_msg"] = "Cập nhật trạng thái thành công!";
-    header("Location: /MiniShop_NguyenNghiaNhan/admin/order"); exit;
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["btnUpdateOrder"])) {
+    $status = (int)$_POST["status"];
+    $note = trim($_POST["note"] ?? "");
+    
+    // Update order
+    $dao->updateOrder($id, $status, $note);
+    
+    // Update customer info (fullname, phone, address)
+    $customerDAO = new \DAO\CustomerDAO();
+    $customer_id = $order['customer_id'];
+    $customer = $customerDAO->findById($customer_id);
+    if ($customer) {
+        $customer->fullname = trim($_POST["customer_name"] ?? "");
+        $customer->phone = trim($_POST["phone"] ?? "");
+        $customer->address = trim($_POST["address"] ?? "");
+        $customerDAO->update($customer);
+    }
+
+    $_SESSION["success_msg"] = "Cập nhật đơn hàng thành công!";
+    header("Location: /MiniShop_NguyenNghiaNhan/admin/order/detail/$id"); exit;
 }
 
 $details = $dao->getOrderDetails($id);

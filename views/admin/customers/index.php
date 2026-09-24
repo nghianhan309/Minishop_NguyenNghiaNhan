@@ -32,17 +32,18 @@
 </div>
 
 <table class="table table-bordered table-hover">
-    <thead class="table-light"><tr><th>ID</th><th>Họ tên</th><th>Số điện thoại</th><th>Email</th><th>Chức năng</th></tr></thead>
+    <thead class="table-light"><tr><th>ID</th><th>Họ tên</th><th>Tên đăng nhập</th><th>Số điện thoại</th><th>Email</th><th>Chức năng</th></tr></thead>
     <tbody>
         <?php foreach ($customers as $item): ?>
         <tr>
             <td><?= $item->id ?></td>
             <td><?= htmlspecialchars($item->fullname) ?></td>
+            <td><?= $item->username ? htmlspecialchars($item->username) : '<span class="text-muted fst-italic">Khách vãng lai</span>' ?></td>
             <td><?= htmlspecialchars($item->phone) ?></td>
             <td><?= htmlspecialchars((string)$item->email) ?></td>
             <td>
                 <a href="/MiniShop_NguyenNghiaNhan/admin/customer/edit/<?= $item->id ?>" class="btn btn-warning btn-sm">Sửa</a>
-                <form action="delete.php" method="POST" class="d-inline" onsubmit="return confirm('Bạn có chắc chắn muốn xóa không?')"><input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION["csrf_token"] ?? "") ?>"><input type="hidden" name="id" value="<?= $item->id ?>"><button type="submit" class="btn btn-danger btn-sm">Xóa</button></form>
+                <form action="/MiniShop_NguyenNghiaNhan/admin/customer/delete" method="POST" class="d-inline" onsubmit="return confirm('Bạn có chắc chắn muốn xóa không?')"><input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION["csrf_token"] ?? "") ?>"><input type="hidden" name="id" value="<?= $item->id ?>"><button type="submit" class="btn btn-danger btn-sm">Xóa</button></form>
             </td>
         </tr>
         <?php endforeach; ?>

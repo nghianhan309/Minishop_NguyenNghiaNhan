@@ -13,7 +13,7 @@ class UserController
     public function index()
     {
         RoleMiddleware::checkAdmin();
-$pageTitle = "Quản lý nhân viên";
+        $pageTitle = "Quản lý quản trị viên";
 
 $dao = new UserDAO();
 

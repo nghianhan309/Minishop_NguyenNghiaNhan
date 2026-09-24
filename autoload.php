@@ -27,4 +27,5 @@ spl_autoload_register(function ($className) {
 
 define('BASE_URL', '/MiniShop_NguyenNghiaNhan/');
 define('PRODUCT_IMAGE_URL', BASE_URL . 'uploads/products/');
+define('CART_SESSION_KEY', 'cart');
 ?>

@@ -64,6 +64,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $price = (float)($_POST["price"] ?? 0);
     $discount_price = (float)($_POST["discount_price"] ?? 0);
     $quantity = (int)($_POST["quantity"] ?? 0);
+    $description = $_POST["description"] ?? "";
 
     $fileName = $_FILES["image"]["name"] ?? "";
     $tmpName = $_FILES["image"]["tmp_name"] ?? "";
@@ -93,11 +94,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (empty($errors)) {
         if ($fileName != "") {
             $image = time() . "_" . $slug . "." . $extension;
-            $uploadPath = __DIR__ . "/../../../uploads/products/" . $image;
+            $uploadPath = __DIR__ . "/../../uploads/products/" . $image;
             move_uploaded_file($tmpName, $uploadPath);
         }
 
-        $p = new Product($categoryId, $brandId, $proname, $slug, $price, $discount_price, $quantity, "", $image, 1);
+        $p = new Product($categoryId, $brandId, $proname, $slug, $price, $discount_price, $quantity, $description, $image, 1);
         $insertedId = $dao->insert($p);
         if ($insertedId > 0) {
             // Upload gallery
@@ -106,7 +107,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     if ($_FILES["images"]["error"][$key] == UPLOAD_ERR_OK) {
                         $gExt = strtolower(pathinfo($gName, PATHINFO_EXTENSION));
                         $gImage = time() . "_" . $key . "_" . $slug . "." . $gExt;
-                        $gPath = __DIR__ . "/../../../uploads/products/" . $gImage;
+                        $gPath = __DIR__ . "/../../uploads/products/" . $gImage;
                         if (move_uploaded_file($_FILES["images"]["tmp_name"][$key], $gPath)) {
                             $dao->insertImage($insertedId, $gImage);
                         }
@@ -138,7 +139,7 @@ if (!$product) die("Không tìm thấy sản phẩm");
 if (isset($_GET["del_img"])) {
     $imgId = (int)$_GET["del_img"];
     $dao->deleteImage($imgId);
-    header("Location: /MiniShop_NguyenNghiaNhan/admin/product"); exit;
+    header("Location: /MiniShop_NguyenNghiaNhan/admin/product/edit/" . $id); exit;
 }
 
 $categories = $catDao->getAll();
@@ -155,6 +156,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $price = (float)($_POST["price"] ?? 0);
     $discount_price = (float)($_POST["discount_price"] ?? 0);
     $quantity = (int)($_POST["quantity"] ?? 0);
+    $description = $_POST["description"] ?? "";
 
     $fileName = $_FILES["image"]["name"] ?? "";
     $tmpName = $_FILES["image"]["tmp_name"] ?? "";
@@ -177,9 +179,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (empty($errors)) {
         if ($fileName != "") {
             $image = time() . "_" . $slug . "." . $extension;
-            $uploadPath = __DIR__ . "/../../../uploads/products/" . $image;
+            $uploadPath = __DIR__ . "/../../uploads/products/" . $image;
             if (!empty($product->image)) {
-                $oldImage = __DIR__ . "/../../../uploads/products/" . $product->image;
+                $oldImage = __DIR__ . "/../../uploads/products/" . $product->image;
                 if (file_exists($oldImage)) unlink($oldImage);
             }
             move_uploaded_file($tmpName, $uploadPath);
@@ -192,6 +194,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $product->price = $price;
         $product->discount_price = $discount_price;
         $product->quantity = $quantity;
+        $product->description = $description;
         $product->image = $image;
         
         if ($dao->update($product)) {
@@ -200,7 +203,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     if ($_FILES["images"]["error"][$key] == UPLOAD_ERR_OK) {
                         $gExt = strtolower(pathinfo($gName, PATHINFO_EXTENSION));
                         $gImage = time() . "_" . $key . "_" . $slug . "." . $gExt;
-                        $gPath = __DIR__ . "/../../../uploads/products/" . $gImage;
+                        $gPath = __DIR__ . "/../../uploads/products/" . $gImage;
                         if (move_uploaded_file($_FILES["images"]["tmp_name"][$key], $gPath)) {
                             $dao->insertImage($id, $gImage);
                         }

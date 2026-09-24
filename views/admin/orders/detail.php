@@ -4,19 +4,36 @@
 <?php endif; ?>
 <div class="card mb-3">
     <div class="card-body">
-        <p><strong>Khách hàng:</strong> <?= htmlspecialchars($order["customer_name"]) ?></p>
-        <p><strong>SĐT:</strong> <?= htmlspecialchars($order["phone"]) ?></p>
-        <p><strong>Địa chỉ:</strong> <?= htmlspecialchars($order["address"]) ?></p>
-        <form method="POST" class="d-flex align-items-center">
-            <strong class="me-2">Trạng thái:</strong>
-            <select name="status" class="form-select w-auto me-2">
-                <option value="0" <?= $order["status"]==0?"selected":"" ?>>Chờ xác nhận</option>
-                <option value="1" <?= $order["status"]==1?"selected":"" ?>>Đã xác nhận</option>
-                <option value="2" <?= $order["status"]==2?"selected":"" ?>>Đang giao</option>
-                <option value="3" <?= $order["status"]==3?"selected":"" ?>>Hoàn thành</option>
-                <option value="4" <?= $order["status"]==4?"selected":"" ?>>Đã hủy</option>
-            </select>
-            <button type="submit" name="btnUpdateStatus" class="btn btn-primary">Cập nhật</button>
+        <form method="POST" action="">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">Họ tên khách hàng</label>
+                    <input type="text" name="customer_name" class="form-control" value="<?= htmlspecialchars($order["customer_name"]) ?>">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">Số điện thoại</label>
+                    <input type="text" name="phone" class="form-control" value="<?= htmlspecialchars($order["phone"]) ?>">
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-bold">Địa chỉ giao hàng</label>
+                <input type="text" name="address" class="form-control" value="<?= htmlspecialchars($order["address"]) ?>">
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-bold">Ghi chú & Hình thức giao/nhận</label>
+                <textarea name="note" class="form-control" rows="2"><?= htmlspecialchars($order["note"]) ?></textarea>
+            </div>
+            <div class="mb-3 d-flex align-items-center">
+                <strong class="me-3">Trạng thái đơn hàng:</strong>
+                <select name="status" class="form-select w-auto me-3">
+                    <option value="0" <?= $order["status"]==0?"selected":"" ?>>Chờ xác nhận</option>
+                    <option value="1" <?= $order["status"]==1?"selected":"" ?>>Đã xác nhận</option>
+                    <option value="2" <?= $order["status"]==2?"selected":"" ?>>Đang giao</option>
+                    <option value="3" <?= $order["status"]==3?"selected":"" ?>>Hoàn thành</option>
+                    <option value="4" <?= $order["status"]==4?"selected":"" ?>>Đã hủy</option>
+                </select>
+                <button type="submit" name="btnUpdateOrder" class="btn btn-primary">Lưu thay đổi</button>
+            </div>
         </form>
     </div>
 </div>

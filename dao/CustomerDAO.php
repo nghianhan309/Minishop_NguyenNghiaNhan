@@ -8,14 +8,14 @@ use Models\Customer;
 class CustomerDAO extends BaseDAO {
     public function getPage(int $limit, int $offset, string $keyword = "", string $sort = ""): array {
         $list = [];
-        $sql = "SELECT * FROM customers";
+        $sql = "SELECT c.*, u.username FROM customers c LEFT JOIN users u ON c.phone = u.phone AND u.role = 2";
         if ($keyword !== "") {
-            $sql .= " WHERE fullname LIKE ? OR phone LIKE ?";
+            $sql .= " WHERE c.fullname LIKE ? OR c.phone LIKE ?";
         }
         
-        if ($sort === "name_asc") $sql .= " ORDER BY fullname ASC";
-        elseif ($sort === "name_desc") $sql .= " ORDER BY fullname DESC";
-        else $sql .= " ORDER BY id DESC";
+        if ($sort === "name_asc") $sql .= " ORDER BY c.fullname ASC";
+        elseif ($sort === "name_desc") $sql .= " ORDER BY c.fullname DESC";
+        else $sql .= " ORDER BY c.id DESC";
 
         $sql .= " LIMIT ? OFFSET ?";
 
@@ -31,6 +31,8 @@ class CustomerDAO extends BaseDAO {
         
         while ($row = $result->fetch_assoc()) {
             $b = new Customer($row["fullname"], $row["phone"], $row["email"] ?? null, $row["address"] ?? null);
+            $b->note = $row["note"] ?? null;
+            $b->username = $row["username"] ?? null;
             $b->id = $row["id"];
             $list[] = $b;
         }
@@ -47,21 +49,37 @@ class CustomerDAO extends BaseDAO {
         $result = $this->executeQuery("SELECT * FROM customers WHERE id = $id");
         if ($row = $result->fetch_assoc()) {
             $b = new Customer($row["fullname"], $row["phone"], $row["email"] ?? null, $row["address"] ?? null);
+            $b->note = $row["note"] ?? null;
+            $b->id = $row["id"];
+            return $b;
+        }
+        return null;
+    }
+
+    public function findByPhone(string $phone): ?Customer {
+        $sql = "SELECT * FROM customers WHERE phone = ?";
+        $stmt = $this->prepare($sql);
+        $stmt->bind_param("s", $phone);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if ($row = $result->fetch_assoc()) {
+            $b = new Customer($row["fullname"], $row["phone"], $row["email"] ?? null, $row["address"] ?? null);
+            $b->note = $row["note"] ?? null;
             $b->id = $row["id"];
             return $b;
         }
         return null;
     }
     public function insert(Customer $b): bool {
-        $sql = "INSERT INTO customers (fullname, phone, email, address) VALUES (?, ?, ?, ?)";
+        $sql = "INSERT INTO customers (fullname, phone, email, address, note) VALUES (?, ?, ?, ?, ?)";
         $stmt = $this->prepare($sql);
-        $stmt->bind_param("ssss", $b->fullname, $b->phone, $b->email, $b->address);
+        $stmt->bind_param("sssss", $b->fullname, $b->phone, $b->email, $b->address, $b->note);
         return $stmt->execute();
     }
     public function update(Customer $b): bool {
-        $sql = "UPDATE customers SET fullname=?, phone=?, email=?, address=? WHERE id=?";
+        $sql = "UPDATE customers SET fullname=?, phone=?, email=?, address=?, note=? WHERE id=?";
         $stmt = $this->prepare($sql);
-        $stmt->bind_param("ssssi", $b->fullname, $b->phone, $b->email, $b->address, $b->id);
+        $stmt->bind_param("sssssi", $b->fullname, $b->phone, $b->email, $b->address, $b->note, $b->id);
         return $stmt->execute();
     }
     public function delete(int $id): bool {

@@ -38,9 +38,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     CsrfMiddleware::verify();
     $fullname = $_POST['fullname'] ?? '';
     $phone = $_POST['phone'] ?? '';
+    $email = $_POST['email'] ?? '';
+    $address = $_POST['address'] ?? '';
+    $note = $_POST['note'] ?? '';
     if ($fullname != '') {
         $dao = new \DAO\CustomerDAO();
-        $b = new Customer($fullname, $phone, null, null);
+        $b = new Customer($fullname, $phone, $email, $address);
+        $b->note = $note;
         $dao->insert($b);
         header("Location: /MiniShop_NguyenNghiaNhan/admin/customer"); exit;
     }
@@ -61,9 +65,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     CsrfMiddleware::verify();
     $fullname = $_POST['fullname'] ?? '';
     $phone = $_POST['phone'] ?? '';
+    $email = $_POST['email'] ?? '';
+    $address = $_POST['address'] ?? '';
+    $note = $_POST['note'] ?? '';
     if ($fullname != '') {
         $b->fullname = $fullname;
         $b->phone = $phone;
+        $b->email = $email;
+        $b->address = $address;
+        $b->note = $note;
         $dao->update($b);
         header("Location: /MiniShop_NguyenNghiaNhan/admin/customer"); exit;
     }

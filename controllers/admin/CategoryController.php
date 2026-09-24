@@ -4,11 +4,17 @@ namespace Controllers\Admin;
 use Models\Category;
 
 use Middleware\CsrfMiddleware;
+use Middleware\RoleMiddleware;
 
 use DAO\CategoryDAO;
 
 class CategoryController
 {
+    public function __construct()
+    {
+        RoleMiddleware::checkAdmin();
+    }
+    
     public function index()
     {
         $pageTitle = "Danh sách danh mục";

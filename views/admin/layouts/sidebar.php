@@ -6,6 +6,7 @@
                     <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Dashboard</span>
                 </a>
             </li>
+            <?php if (isset($_SESSION['user']) && $_SESSION['user']->role == 1): ?>
             <li class="nav-item w-100 mb-1">
                 <a href="/MiniShop_NguyenNghiaNhan/admin/category" class="nav-link align-middle px-0 text-white">
                     <i class="fs-4 bi-list-task"></i> <span class="ms-1 d-none d-sm-inline">Danh mục</span>
@@ -16,9 +17,15 @@
                     <i class="fs-4 bi-tags"></i> <span class="ms-1 d-none d-sm-inline">Thương hiệu</span>
                 </a>
             </li>
+            <?php endif; ?>
             <li class="nav-item w-100 mb-1">
                 <a href="/MiniShop_NguyenNghiaNhan/admin/product" class="nav-link align-middle px-0 text-white">
                     <i class="fs-4 bi-box"></i> <span class="ms-1 d-none d-sm-inline">Sản phẩm</span>
+                </a>
+            </li>
+            <li class="nav-item w-100 mb-1">
+                <a href="/MiniShop_NguyenNghiaNhan/admin/post" class="nav-link align-middle px-0 text-white">
+                    <i class="fs-4 bi-file-earmark-text"></i> <span class="ms-1 d-none d-sm-inline">Bài viết</span>
                 </a>
             </li>
             <li class="nav-item w-100 mb-1">
@@ -29,7 +36,7 @@
             <?php if (isset($_SESSION['user']) && $_SESSION['user']->role == 1): ?>
             <li class="nav-item w-100 mb-1">
                 <a href="/MiniShop_NguyenNghiaNhan/admin/user" class="nav-link align-middle px-0 text-white">
-                    <i class="fs-4 bi-person-badge"></i> <span class="ms-1 d-none d-sm-inline">Người dùng</span>
+                    <i class="fs-4 bi-person-badge"></i> <span class="ms-1 d-none d-sm-inline">Quản trị viên</span>
                 </a>
             </li>
             <?php endif; ?>
@@ -38,11 +45,13 @@
                     <i class="fs-4 bi-cart"></i> <span class="ms-1 d-none d-sm-inline">Đơn hàng</span>
                 </a>
             </li>
+            <?php if (isset($_SESSION['user']) && $_SESSION['user']->role == 1): ?>
             <li class="nav-item w-100 mb-1">
-                <a href="#" class="nav-link align-middle px-0 text-white">
+                <a href="/MiniShop_NguyenNghiaNhan/admin/report" class="nav-link align-middle px-0 text-white">
                     <i class="fs-4 bi-bar-chart"></i> <span class="ms-1 d-none d-sm-inline">Báo cáo</span>
                 </a>
             </li>
+            <?php endif; ?>
 
         </ul>
     </div>

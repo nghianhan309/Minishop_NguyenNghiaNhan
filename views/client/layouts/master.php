@@ -18,6 +18,10 @@
             .navbar .nav-item:hover .nav-link { color: #ffc107; }
             .navbar .nav-item:hover .dropdown-menu { display: block; margin-top: 0; }
         }
+        
+        /* Custom Dropdown Styling */
+        .custom-dropdown-item { transition: all 0.2s ease-in-out; }
+        .custom-dropdown-item:hover { background-color: #f8f9fa; transform: translateX(5px); color: #0d6efd; }
     </style>
 </head>
 <body>
@@ -29,6 +33,12 @@
     
     <?php include __DIR__ . "/footer.php"; ?>
     
+    <div id="toastContainer" class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1055;"></div>
+    
+    <script>
+        const BASE_URL = '<?= BASE_URL ?>';
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="<?= BASE_URL ?>assets/client/cart.js"></script>
 </body>
 </html>

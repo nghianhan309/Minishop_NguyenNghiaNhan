@@ -32,11 +32,18 @@
 </div>
 
 <table class="table table-bordered table-hover">
-    <thead class="table-light"><tr><th>ID</th><th>Tên thương hiệu</th><th>Slug</th><th>Trạng thái</th><th>Chức năng</th></tr></thead>
+    <thead class="table-light"><tr><th>ID</th><th>Hình ảnh</th><th>Tên thương hiệu</th><th>Slug</th><th>Trạng thái</th><th>Chức năng</th></tr></thead>
     <tbody>
         <?php foreach ($brands as $item): ?>
         <tr>
             <td><?= $item->id ?></td>
+            <td>
+                <?php if ($item->image): ?>
+                    <img src="/MiniShop_NguyenNghiaNhan/uploads/brands/<?= $item->image ?>" alt="<?= htmlspecialchars($item->name) ?>" style="max-height: 40px; object-fit: contain;">
+                <?php else: ?>
+                    <span class="text-muted">Không có</span>
+                <?php endif; ?>
+            </td>
             <td><?= htmlspecialchars($item->name) ?></td>
             <td><?= htmlspecialchars($item->slug) ?></td>
             <td><?= $item->status == 1 ? "<span class=\"badge bg-success\">Hiển thị</span>" : "<span class=\"badge bg-secondary\">Ẩn</span>" ?></td>

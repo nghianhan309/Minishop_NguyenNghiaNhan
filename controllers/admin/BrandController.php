@@ -4,11 +4,17 @@ namespace Controllers\Admin;
 use Models\Brand;
 
 use Middleware\CsrfMiddleware;
+use Middleware\RoleMiddleware;
 
 use DAO\BrandDAO;
 
 class BrandController
 {
+    public function __construct()
+    {
+        RoleMiddleware::checkAdmin();
+    }
+
     public function index()
     {
         $pageTitle = "Quản lý thương hiệu";
@@ -38,9 +44,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     CsrfMiddleware::verify();
     $name = $_POST['name'] ?? '';
     $slug = $_POST['slug'] ?? '';
+    $image = null;
+    
+    if (isset($_FILES['image']) && $_FILES['image']['error'] == UPLOAD_ERR_OK) {
+        $ext = strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION));
+        $imageName = time() . "_" . $slug . "." . $ext;
+        $uploadPath = __DIR__ . "/../../uploads/brands/";
+        if (!is_dir($uploadPath)) mkdir($uploadPath, 0777, true);
+        if (move_uploaded_file($_FILES['image']['tmp_name'], $uploadPath . $imageName)) {
+            $image = $imageName;
+        }
+    }
+    
     if ($name != '') {
         $dao = new \DAO\BrandDAO();
-        $b = new Brand($name, $slug, null, null, 1);
+        $b = new Brand($name, $slug, $image, null, 1);
         $dao->insert($b);
         header("Location: /MiniShop_NguyenNghiaNhan/admin/brand"); exit;
     }
@@ -61,9 +79,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     CsrfMiddleware::verify();
     $name = $_POST['name'] ?? '';
     $slug = $_POST['slug'] ?? '';
+    $image = $b->image;
+    
+    if (isset($_FILES['image']) && $_FILES['image']['error'] == UPLOAD_ERR_OK) {
+        $ext = strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION));
+        $imageName = time() . "_" . $slug . "." . $ext;
+        $uploadPath = __DIR__ . "/../../uploads/brands/";
+        if (!is_dir($uploadPath)) mkdir($uploadPath, 0777, true);
+        if (move_uploaded_file($_FILES['image']['tmp_name'], $uploadPath . $imageName)) {
+            $image = $imageName;
+        }
+    }
+    
     if ($name != '') {
         $b->name = $name;
         $b->slug = $slug;
+        $b->image = $image;
         $dao->update($b);
         header("Location: /MiniShop_NguyenNghiaNhan/admin/brand"); exit;
     }

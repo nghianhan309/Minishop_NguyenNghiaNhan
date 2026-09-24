@@ -1,4 +1,4 @@
-<h2>Danh sách nhân viên</h2>
+<h2>Danh sách quản trị viên / nhân viên</h2>
 <a href="/MiniShop_NguyenNghiaNhan/admin/user/create" class="btn btn-success mb-3">Thêm mới</a>
 <form class="row mb-3" method="GET">
     <div class="col-md-4">
@@ -42,7 +42,7 @@
             <td><?= $item->status == 1 ? "<span class=\"badge bg-success\">Hiển thị</span>" : "<span class=\"badge bg-secondary\">Ẩn</span>" ?></td>
             <td>
                 <a href="/MiniShop_NguyenNghiaNhan/admin/user/edit/<?= $item->id ?>" class="btn btn-warning btn-sm">Sửa</a>
-                <form action="delete.php" method="POST" class="d-inline" onsubmit="return confirm('Bạn có chắc chắn muốn xóa không?')"><input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION["csrf_token"] ?? "") ?>"><input type="hidden" name="id" value="<?= $item->id ?>"><button type="submit" class="btn btn-danger btn-sm">Xóa</button></form>
+                <form action="/MiniShop_NguyenNghiaNhan/admin/user/delete" method="POST" class="d-inline" onsubmit="return confirm('Bạn có chắc chắn muốn xóa không?')"><input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION["csrf_token"] ?? "") ?>"><input type="hidden" name="id" value="<?= $item->id ?>"><button type="submit" class="btn btn-danger btn-sm">Xóa</button></form>
             </td>
         </tr>
         <?php endforeach; ?>

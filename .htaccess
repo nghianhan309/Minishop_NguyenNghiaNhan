@@ -7,9 +7,35 @@ RewriteCond %{REQUEST_FILENAME} -d
 RewriteRule ^ - [L]
 
 # Route cho danh mục, thương hiệu, sản phẩm
+RewriteRule ^categories/?$ index.php?area=client&controller=category&action=index [L,QSA]
 RewriteRule ^category/([^/]+)/?$ index.php?area=client&controller=product&action=category&slug=$1 [L,QSA]
+RewriteRule ^brands/?$ index.php?area=client&controller=brand&action=index [L,QSA]
 RewriteRule ^brand/([^/]+)/?$ index.php?area=client&controller=product&action=brand&slug=$1 [L,QSA]
 RewriteRule ^product/([^/]+)/?$ index.php?area=client&controller=product&action=detail&slug=$1 [L,QSA]
+RewriteRule ^products/?$ index.php?area=client&controller=product&action=index [L,QSA]
+RewriteRule ^product/?$ index.php?area=client&controller=product&action=index [L,QSA]
+RewriteRule ^post/([^/]+)/?$ index.php?area=client&controller=post&action=detail&slug=$1 [L,QSA]
+
+# Route cho giỏ hàng
+RewriteRule ^cart/checkout/?$ index.php?area=client&controller=cart&action=checkout [L,QSA]
+RewriteRule ^cart/([a-zA-Z0-9_-]+)/?$ index.php?area=client&controller=cart&action=$1 [L,QSA]
+RewriteRule ^cart/?$ index.php?area=client&controller=cart&action=index [L,QSA]
+
+# Auth Routes
+RewriteRule ^login/?$ index.php?area=client&controller=auth&action=login [L,QSA]
+RewriteRule ^register/?$ index.php?area=client&controller=auth&action=register [L,QSA]
+RewriteRule ^logout/?$ index.php?area=client&controller=auth&action=logout [L,QSA]
+
+# Profile Routes
+RewriteRule ^profile/orderDetail/?$ index.php?area=client&controller=profile&action=orderDetail [L,QSA]
+RewriteRule ^profile/cancelOrder/?$ index.php?area=client&controller=profile&action=cancelOrder [L,QSA]
+RewriteRule ^profile/?$ index.php?area=client&controller=profile&action=index [L,QSA]
+
+# VNPAY Route
+RewriteRule ^vnpay_return/?$ index.php?area=client&controller=cart&action=vnpayReturn [L,QSA]
+
+# API routes
+RewriteRule ^api/product-types/?$ api.php?endpoint=product-types [L,QSA]
 
 # Đưa mọi request về Entry Point index.php
 RewriteRule ^(admin|client)/([a-zA-Z0-9_-]+)/([a-zA-Z0-9_-]+)/([0-9]+)$ index.php?area=$1&controller=$2&action=$3&id=$4 [QSA,L]

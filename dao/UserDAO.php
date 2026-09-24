@@ -8,9 +8,9 @@ require_once __DIR__ . "/BaseDAO.php";
 class UserDAO extends BaseDAO {
     public function getPage(int $limit, int $offset, string $keyword = "", string $sort = ""): array {
         $list = [];
-        $sql = "SELECT * FROM users";
+        $sql = "SELECT * FROM users WHERE role IN (0, 1)";
         if ($keyword !== "") {
-            $sql .= " WHERE fullname LIKE ? OR username LIKE ?";
+            $sql .= " AND (fullname LIKE ? OR username LIKE ?)";
         }
         
         if ($sort === "name_asc") $sql .= " ORDER BY fullname ASC";
@@ -38,7 +38,7 @@ class UserDAO extends BaseDAO {
     }
 
     public function getTotalCount(): int {
-        $result = $this->executeQuery("SELECT COUNT(*) as total FROM users");
+        $result = $this->executeQuery("SELECT COUNT(*) as total FROM users WHERE role IN (0, 1)");
         if ($result && $row = $result->fetch_assoc()) return (int)$row["total"];
         return 0;
     }
@@ -76,15 +76,28 @@ class UserDAO extends BaseDAO {
         return null;
     }
     public function insert(User $b): bool {
-        $sql = "INSERT INTO users (fullname, username, email, phone, role, status) VALUES (?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO users (fullname, username, password, email, phone, role, status) VALUES (?, ?, ?, ?, ?, ?, ?)";
         $stmt = $this->prepare($sql);
-        $stmt->bind_param("ssssii", $b->fullname, $b->username, $b->email, $b->phone, $b->role, $b->status);
+        $stmt->bind_param("sssssii", $b->fullname, $b->username, $b->password, $b->email, $b->phone, $b->role, $b->status);
         return $stmt->execute();
     }
     public function update(User $b): bool {
-        $sql = "UPDATE users SET fullname=?, username=?, email=?, phone=?, role=?, status=? WHERE id=?";
+        if ($b->password) {
+            $sql = "UPDATE users SET fullname=?, username=?, password=?, email=?, phone=?, role=?, status=? WHERE id=?";
+            $stmt = $this->prepare($sql);
+            $stmt->bind_param("sssssiii", $b->fullname, $b->username, $b->password, $b->email, $b->phone, $b->role, $b->status, $b->id);
+            return $stmt->execute();
+        } else {
+            $sql = "UPDATE users SET fullname=?, username=?, email=?, phone=?, role=?, status=? WHERE id=?";
+            $stmt = $this->prepare($sql);
+            $stmt->bind_param("ssssiii", $b->fullname, $b->username, $b->email, $b->phone, $b->role, $b->status, $b->id);
+            return $stmt->execute();
+        }
+    }
+    public function updateProfile(int $id, string $fullname, string $phone, string $email): bool {
+        $sql = "UPDATE users SET fullname=?, phone=?, email=? WHERE id=?";
         $stmt = $this->prepare($sql);
-        $stmt->bind_param("ssssiii", $b->fullname, $b->username, $b->email, $b->phone, $b->role, $b->status, $b->id);
+        $stmt->bind_param("sssi", $fullname, $phone, $email, $id);
         return $stmt->execute();
     }
     public function delete(int $id): bool {
